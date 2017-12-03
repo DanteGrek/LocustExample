@@ -3,7 +3,7 @@ import random
 from locust import TaskSet,  task
 from pyquery import PyQuery
 
-from constants import *
+HOST = "https://www.archlinux.org"
 
 class AbstractUser(TaskSet):
     min_wait = 1000
@@ -14,13 +14,13 @@ class AbstractUser(TaskSet):
         pq = PyQuery(r.content, parser='html')
         self.sitemap_links = []
         for a in pq.find("a"):
-            print "Element:", str(a.attrib)
+            # print "Element:", str(a.attrib)
             if "href" in a.attrib:
                 if HOST in a.attrib['href']:
-                    print "Endpoint: ", str(a.attrib['href'])
+                    # print "Endpoint: ", str(a.attrib['href'])
                     self.sitemap_links.append(a.attrib['href'][:HOST.lenght])
                 self.sitemap_links.append(a.attrib['href'])
-            print "\nlinks\n", str(self.sitemap_links)+"\n##################################\n"
+            # print "\nlinks\n", str(self.sitemap_links)+"\n##################################\n"
 
     def get_index(self):
         return self.client.get("/")

@@ -1,3 +1,4 @@
-/locustenv/
+locustenv/
+env/
 *.pyc
 .idea

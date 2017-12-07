@@ -7,7 +7,7 @@ HOST = "https://www.archlinux.org"
 
 class AbstractUser(TaskSet):
     min_wait = 1000
-    max_wait = 10000
+    max_wait = 5000
 
     def on_start(self):
         r = self.get_index()
@@ -18,28 +18,34 @@ class AbstractUser(TaskSet):
             if "href" in a.attrib:
                 if HOST in a.attrib['href']:
                     # print "Endpoint: ", str(a.attrib['href'])
-                    self.sitemap_links.append(a.attrib['href'][:HOST.lenght])
+                    self.sitemap_links.append(a.attrib['href'])
                 self.sitemap_links.append(a.attrib['href'])
             # print "\nlinks\n", str(self.sitemap_links)+"\n##################################\n"
 
     def get_index(self):
         return self.client.get("/")
 
-    @task(30)
-    def load_page(self):
-        url = random.choice(self.sitemap_links)
-        self.client.get(url)
-
-    def stop(self):
-        self.interrupt()
+    # def stop(self):
+    #     self.interrupt()
 
 
-class ArchlinuxUser(AbstractUser):
+class WebUser(AbstractUser):
 
     @task(30)
     def load_page(self):
-        url = random.choice(self.sitemap_links)
-        self.client.get(url)
+        if len(self.sitemap_links) > 0:
+            url = random.choice(self.sitemap_links)
+            self.client.get(url)
+        else:
+            self.get_index()
+
+    # @task
+    # def test(self):
+    #     self.get_index()
+    # @task(30)
+    # def load_page(self):
+    #     url = random.choice(self.sitemap_links)
+    #     self.client.get(url)
     # @task(30)
     # class SubTaskSet(AbstractUser):
 
